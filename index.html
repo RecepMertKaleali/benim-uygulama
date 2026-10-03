@@ -8,47 +8,100 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="manifest" href="manifest.json">
+    <style>
+    @keyframes gradientBG {
+        0% { background-position: 0% 50%; }
+        50% { background-position: 100% 50%; }
+        100% { background-position: 0% 50%; }
+    }
+
+    body {
+    background: #000000;
+    color: #f8fafc;
+    font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+}
+
+    /* Kartların Cam Efekti (Glassmorphism) ve Uçma Efekti */
+    .glass-card {
+        background: rgba(30, 41, 59, 0.7);
+        backdrop-filter: blur(12px);
+        -webkit-backdrop-filter: blur(12px);
+        border: 1px solid rgba(255, 255, 255, 0.08);
+        transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .glass-card:hover {
+        transform: translateY(-8px) scale(1.02);
+        border-color: rgba(99, 102, 241, 0.6);
+        box-shadow: 0 20px 40px -15px rgba(99, 102, 241, 0.3);
+    }
+
+    /* Arama Kutusu Efekti */
+    .search-glow:focus {
+        box-shadow: 0 0 25px rgba(99, 102, 241, 0.5);
+        border-color: rgba(99, 102, 241, 1);
+    }
+</style>
 </head>
-<body class="bg-slate-50 text-slate-800 font-sans min-h-screen flex flex-col">
+<body class="text-slate-100 font-sans min-h-screen flex flex-col" style="background-color: #2214a1 !important;"></body>
 
-    <!-- Üst Menü / Header -->
-    <header class="bg-indigo-700 text-white shadow-md">
-        <div class="max-w-7xl mx-auto px-4 py-4 flex justify-between items-center">
-            <div class="flex items-center space-x-3">
-                <i class="fa-solid fa-wrench text-2xl text-amber-400"></i>
-                <span class="text-xl font-bold tracking-wide">TamirAsistanı</span>
+    <!-- Modern Cam Efektli Header -->
+<header class="sticky top-0 z-50 backdrop-blur-xl bg-slate-950/70 border-b border-slate-800/80">
+    <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+        <!-- Logo ve Başlık -->
+        <a href="#" class="flex items-center space-x-3 group">
+            <div class="w-10 h-10 rounded-xl bg-gradient-to-tr from-indigo-500 to-purple-500 flex items-center justify-center shadow-lg shadow-indigo-500/30 group-hover:scale-105 transition-transform">
+                <i class="fa-solid fa-screwdriver-wrench text-white text-lg"></i>
             </div>
-            <div class="hidden md:flex space-x-6 text-sm font-medium">
-                <a href="#" class="hover:text-amber-300 transition">Ana Sayfa</a>
-                <a href="#kategoriler" class="hover:text-amber-300 transition">Kategoriler</a>
-                <a href="#rehberler" class="hover:text-amber-300 transition">Popüler Tamirler</a>
-            </div>
-            <button onclick="alert('Yeni rehber ekleme paneli yakında eklenecek!')" class="bg-amber-500 hover:bg-amber-600 text-slate-900 font-semibold px-4 py-2 rounded-lg text-sm transition shadow">
-                <i class="fa-solid fa-plus mr-1"></i> Rehber Ekle
-            </button>
-        </div>
-    </header>
+            <span class="text-xl font-black text-transparent bg-clip-text bg-gradient-to-r from-white to-slate-400 tracking-wider">TamirAsistanı</span>
+        </a>
 
-    <!-- Hero / Arama Alanı -->
-    <section class="bg-gradient-to-r from-indigo-800 to-indigo-600 text-white py-16 px-4 text-center">
-        <div class="max-w-3xl mx-auto">
-            <h1 class="text-3xl md:text-5xl font-extrabold mb-4">Eşyan Bozuldu mu? Atma, Kendin Tamir Et!</h1>
-            <p class="text-indigo-100 mb-8 text-lg">Binlerce adım adım tamir rehberiyle paradan tasarruf et, elektronik ve ev atıklarını azalt.</p>
-            
-            <!-- Arama Kutusu -->
-            <div class="relative max-w-xl mx-auto">
-                <input type="text" id="searchInput" oninput="filterRehberler()" placeholder="Örn: Kahve makinesi su akıtıyor, telefon ekranı..." class="w-full py-4 pl-12 pr-4 rounded-xl text-slate-800 shadow-lg focus:outline-none focus:ring-2 focus:ring-amber-400 text-sm md:text-base">
-                <i class="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-slate-400 text-lg"></i>
-            </div>
-        </div>
-    </section>
+        <!-- Menü Linkleri -->
+        <nav class="hidden md:flex items-center space-x-8 text-sm font-medium text-slate-300">
+            <a href="#" class="hover:text-indigo-400 transition-colors">Ana Sayfa</a>
+            <a href="#kategoriler" class="hover:text-indigo-400 transition-colors">Kategoriler</a>
+            <a href="#" class="hover:text-indigo-400 transition-colors">Popüler Tamirler</a>
+        </nav>
+
+        <!-- Yeni Rehber Ekle Butonu -->
+        <button onclick="rehberModalAc()" class="relative group overflow-hidden rounded-xl p-[1px] focus:outline-none">
+            <span class="absolute inset-0 bg-gradient-to-r from-indigo-500 to-purple-500 rounded-xl transition-all duration-300 group-hover:opacity-90"></span>
+            <span class="relative px-5 py-2.5 bg-slate-950 rounded-[11px] flex items-center space-x-2 text-sm font-bold text-slate-200 group-hover:bg-transparent group-hover:text-white transition-all">
+                <i class="fa-solid fa-plus text-xs"></i>
+                <span>Rehber Ekle</span>
+            </span>
+        </button>
+    </div>
+</header>
+
+   <!-- Arama ve Başlık Alanı -->
+<div class="max-w-7xl mx-auto px-6 pt-16 pb-10">
+    <div class="text-center max-w-2xl mx-auto mb-10">
+        <h2 class="text-4xl font-black text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 via-purple-300 to-pink-400 tracking-tight">KENDİN ONAR PLATFORMU</h2>
+        <p class="text-slate-400 mt-3 text-base">120+ profesyonel onarım rehberi ile arızaları kusursuzca çöz.</p>
+    </div>
+    <div class="relative max-w-xl mx-auto">
+        <input type="text" id="searchInput" oninput="filterRehberler()" placeholder="Hangi cihazı veya arızayı arıyorsun?..." 
+               class="search-glow w-full px-6 py-4 pl-14 rounded-2xl bg-slate-900/80 border border-slate-700 text-slate-100 placeholder-slate-500 text-base focus:outline-none transition-all duration-300">
+        <span class="absolute inset-y-0 left-0 flex items-center pl-5 text-slate-400">
+            <i class="fa-solid fa-magnifying-glass text-lg"></i>
+        </span>
+    </div>
+</div>
+
+<!-- Modern Grid (Kartlar) Alanı -->
+<main class="max-w-7xl mx-auto px-6 pb-24">
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        
+       
+</main>
 
     <!-- Ana İçerik -->
     <main class="max-w-7xl mx-auto px-4 py-10 flex-grow w-full">
         
         <!-- Kategoriler -->
         <div id="kategoriler" class="mb-10">
-            <h2 class="text-2xl font-bold mb-6 text-slate-800 flex items-center">
+            <h2 class="text-2xl font-bold mb-6 text-white flex items-center">
                 <i class="fa-solid fa-layer-group text-indigo-600 mr-2"></i> Kategoriler
             </h2>
             <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
@@ -69,7 +122,7 @@
 
         <!-- Rehber Kartları Listesi -->
         <div id="rehberler">
-            <h2 class="text-2xl font-bold mb-6 text-slate-800 flex items-center">
+            <h2 class="text-2xl font-bold mb-6 text-white flex items-center">
                 <i class="fa-solid fa-fire text-amber-500 mr-2"></i> Popüler Tamir Rehberleri
             </h2>
             <div id="cardGrid" class="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -91,6 +144,51 @@
         </div>
     </div>
 
+    <!-- Yeni Rehber Ekle Modal Penceresi -->
+<div id="rehberModal" class="hidden fixed inset-0 z-50 flex items-center justify-center bg-slate-950/80 backdrop-blur-md p-4">
+    <div class="glass-card w-full max-w-lg p-8 rounded-3xl border border-slate-700/80 shadow-2xl relative">
+        <div class="flex justify-between items-center mb-6">
+            <h3 class="text-2xl font-black text-slate-100">Yeni Tamir Rehberi Ekle</h3>
+            <button onclick="rehberModalKapat()" class="text-slate-400 hover:text-white text-xl">
+                <i class="fa-solid fa-xmark"></i>
+            </button>
+        </div>
+        <form onsubmit="yeniRehberEkle(event)" class="space-y-4">
+            <div>
+                <label class="block text-xs font-semibold text-slate-400 uppercase mb-1">Cihaz / Arıza Başlığı</label>
+                <input type="text" id="yeniBaslik" required placeholder="Örn: iPhone 13 Batarya Değişimi" class="w-full px-4 py-3 rounded-xl bg-slate-900/90 border border-slate-700 text-slate-100 text-sm focus:outline-none focus:border-indigo-500 transition-colors">
+            </div>
+            <div>
+                <label class="block text-xs font-semibold text-slate-400 uppercase mb-1">Kategori</label>
+                <select id="yeniKategori" class="w-full px-4 py-3 rounded-xl bg-slate-900/90 border border-slate-700 text-slate-100 text-sm focus:outline-none focus:border-indigo-500 transition-colors">
+                    <option value="Elektronik">Elektronik</option>
+                    <option value="Telefon & Tablet">Telefon & Tablet</option>
+                    <option value="Bilgisayar">Bilgisayar</option>
+                    <option value="Ev Aletleri & Beyaz Eşya">Ev Aletleri & Beyaz Eşya</option>
+                </select>
+            </div>
+            <div class="grid grid-cols-2 gap-4">
+                <div>
+                    <label class="block text-xs font-semibold text-slate-400 uppercase mb-1">Zorluk Seviyesi</label>
+                    <select id="yeniZorluk" class="w-full px-4 py-3 rounded-xl bg-slate-900/90 border border-slate-700 text-slate-100 text-sm focus:outline-none focus:border-indigo-500 transition-colors">
+                        <option value="Kolay">Kolay</option>
+                        <option value="Orta">Orta</option>
+                        <option value="İleri">İleri</option>
+                        <option value="Uzman">Uzman</option>
+                    </select>
+                </div>
+                <div>
+                    <label class="block text-xs font-semibold text-slate-400 uppercase mb-1">Tahmini Süre</label>
+                    <input type="text" id="yeniSure" required placeholder="Örn: 30 Dakika" class="w-full px-4 py-3 rounded-xl bg-slate-900/90 border border-slate-700 text-slate-100 text-sm focus:outline-none focus:border-indigo-500 transition-colors">
+                </div>
+            </div>
+            <div class="pt-4 flex justify-end space-x-3">
+                <button type="button" onclick="rehberModalKapat()" class="px-5 py-2.5 rounded-xl bg-slate-800 text-slate-300 text-sm font-semibold hover:bg-slate-700 transition-colors">İptal</button>
+                <button type="submit" class="px-6 py-2.5 rounded-xl bg-gradient-to-r from-indigo-500 to-purple-500 text-white text-sm font-bold shadow-lg shadow-indigo-500/25 hover:opacity-90 transition-opacity">Kaydet</button>
+            </div>
+        </form>
+    </div>
+</div>
     <!-- Alt Bilgi / Footer -->
     <footer class="bg-slate-800 text-slate-400 py-6 text-center text-sm mt-10">
         <p>&copy; 2026 TamirAsistanı. Herkes kendi eşyasını tamir edebilsin diye tasarlandı.</p>
@@ -98,6 +196,33 @@
 
     <!-- JavaScript Uygulama Mantığı -->
     <script>
+        // Modal Açma / Kapatma Fonksiyonları
+function rehberModalAc() {
+    document.getElementById('rehberModal').classList.remove('hidden');
+}
+
+function rehberModalKapat() {
+    document.getElementById('rehberModal').classList.add('hidden');
+}
+
+// Yeni Rehberi Listeye Ekleme
+function yeniRehberEkle(e) {
+    e.preventDefault();
+    
+    const yeniItem = {
+        id: tamirVerileri.length + 1,
+        baslik: document.getElementById('yeniBaslik').value,
+        kategori: document.getElementById('yeniKategori').value,
+        zorluk: document.getElementById('yeniZorluk').value,
+        sure: document.getElementById('yeniSure').value,
+        adimlar: ["Cihazı güvenli bir masaya sabitleyin.", "Gerekli onarım adımlarını dikkatle uygulayın."]
+    };
+
+    tamirVerileri.unshift(yeniItem);
+    verileriFiltreleVeGoster('');
+    rehberModalKapat();
+    e.target.reset();
+}
         // Örnek Tamir Verileri
         // 20 Maddelik Dev Tamir Verileri
         // 100 Maddelik Dev Tamir ve Parça Veritabanı
@@ -1092,6 +1217,14 @@
         ];
 
         let aktifKategori = 'Tümü';
+        // Kategoriye göre renk veren yardımcı fonksiyon
+function kategoriRengi(kategori) {
+    if (!kategori) return 'text-green-400 bg-green-950/80 border-green-800/50';
+    if (kategori.includes('Bilgisayar')) return 'text-amber-400 bg-amber-950/80 border-amber-800/50';
+    if (kategori.includes('Telefon')) return 'text-yellow-400 bg-yellow-950/80 border-yellow-800/50';
+    if (kategori.includes('Elektronik')) return 'text-orange-400 bg-orange-950/80 border-orange-800/50';
+    return 'text-green-400 bg-green-950/80 border-green-800/50';
+}
 
         // Kartları Ekrana Basma Fonksiyonu
         function kartlariGoster(liste) {
@@ -1105,20 +1238,23 @@
 
             liste.forEach(item => {
                 grid.innerHTML += `
-                    <div onclick="detayAc(${item.id})" class="bg-white rounded-2xl border border-slate-200 p-6 shadow-sm hover:shadow-md transition cursor-pointer flex flex-col justify-between">
-                        <div>
-                            <div class="flex justify-between items-start mb-4">
-                                <span class="bg-indigo-50 text-indigo-700 text-xs font-semibold px-3 py-1 rounded-full">${item.kategori}</span>
-                                <span class="text-xs text-slate-500"><i class="fa-solid fa-clock mr-1"></i>${item.sure}</span>
-                            </div>
-                            <h3 class="font-bold text-lg mb-2 text-slate-800">${item.baslik}</h3>
-                        </div>
-                        <div class="flex items-center justify-between mt-4 pt-4 border-t border-slate-100 text-sm">
-                            <span class="text-slate-500 font-medium">Zorluk: <span class="text-amber-600 font-semibold">${item.zorluk}</span></span>
-                            <span class="text-indigo-600 font-semibold hover:underline">Rehberi İncele <i class="fa-solid fa-arrow-right ml-1"></i></span>
-                        </div>
-                    </div>
-                `;
+    <div onclick="detayAc(${item.id})" class="glass-card group p-7 rounded-3xl flex flex-col justify-between cursor-pointer">
+        <div>
+            <div class="flex justify-between items-center mb-4">
+                <span class="text-xs font-bold text-indigo-400 bg-indigo-950/80 px-3.5 py-1.5 rounded-full uppercase tracking-wider border border-indigo-800/50">${item.kategori}</span>
+                <span class="text-xs text-slate-400 font-medium"><i class="fa-solid fa-clock mr-1"></i>${item.sure}</span>
+            </div>
+            <h3 class="font-bold text-xl text-slate-100 mb-2 group-hover:text-indigo-400 transition-colors">${item.baslik}</h3>
+            <p class="text-slate-400 text-sm leading-relaxed">Cihazın arıza tespiti ve adım adım çözüm yöntemi için tıkla.</p>
+        </div>
+        <div class="mt-8 pt-4 border-t border-slate-800 flex justify-between items-center">
+            <span class="text-xs font-semibold text-slate-500">Zorluk: ${item.zorluk}</span>
+            <span class="inline-flex items-center text-sm font-bold text-indigo-400 group-hover:text-indigo-300 transition-colors">
+                Rehberi İncele <i class="fa-solid fa-arrow-right ml-2 text-xs transform group-hover:translate-x-1 transition-transform"></i>
+            </span>
+        </div>
+    </div>
+`
             });
         }
 
